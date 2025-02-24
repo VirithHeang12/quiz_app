@@ -1,4 +1,5 @@
 import 'package:quiz_app/data/questions.dart';
+import 'package:quiz_app/enums/screen.dart';
 import 'package:quiz_app/models/quiz_answer.dart';
 import 'package:quiz_app/questions_screen.dart';
 import 'package:quiz_app/result_screen.dart';
@@ -16,25 +17,19 @@ class Quiz extends StatefulWidget {
 
 class _QuizState extends State<Quiz> {
   final List<QuizAnswer> answers = [];
-  String activeScreen = 'start-screen';
+  Screen activeScreen = Screen.start;
 
-  void switchScreen() {
+  void switchScreen(Screen screen) {
     setState(() {
-      activeScreen = 'questions-screen';
-    });
-  }
-
-  void showResultScreen() {
-    setState(() {
-      activeScreen = 'result-screen';
+      activeScreen = screen;
     });
   }
 
   void addAnswer(QuizAnswer answer) {
+    answers.add(answer);
+
     if (answers.length == questions.length) {
-      showResultScreen();
-    } else {
-      answers.add(answer);
+      switchScreen(Screen.result);
     }
   }
 
@@ -42,23 +37,29 @@ class _QuizState extends State<Quiz> {
   Widget build(BuildContext context) {
     Widget widget = StartScreen(switchScreen);
 
-    if (activeScreen == 'questions-screen') {
-      widget = QuestionsScreen(
-          addAnswer: addAnswer,
-          showResultScreen: showResultScreen
-      );
-    }
-
-    if (activeScreen == 'result-screen') {
-      widget = ResultScreen(
-        chosenAnswers: answers,
-        restartQuiz: () {
-          setState(() {
-            activeScreen = 'start-screen';
-            answers.clear();
-          });
-        },
-      );
+    switch (activeScreen) {
+      case Screen.start:
+        widget = StartScreen(
+          switchScreen
+        );
+        break;
+      case Screen.questions:
+        widget = QuestionsScreen(
+            addAnswer: addAnswer,
+            showResultScreen: () => switchScreen(Screen.result)
+        );
+        break;
+      case Screen.result:
+        widget = ResultScreen(
+          chosenAnswers: answers,
+          restartQuiz: () {
+            setState(() {
+              activeScreen = Screen.start;
+              answers.clear();
+            });
+          },
+        );
+        break;
     }
 
     return MaterialApp(

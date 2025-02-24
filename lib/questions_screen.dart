@@ -35,48 +35,51 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     final shuffledOptions = currentQuestion.getShuffledOptions();
 
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text('Question ${currentQuestionIndex + 1}',
-              style: GoogleFonts.roboto(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
-          Text(currentQuestion.question,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.roboto(
-                  color: Colors.white,
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-              )
-          ),
-          const SizedBox(height: 10),
-          SizedBox(
-            width: 500,
-            child: ListView.separated(
-              shrinkWrap: true,
-              itemCount: shuffledOptions.length,
-              itemBuilder: (context, index) {
-                return AnswerButton(shuffledOptions[index], () {
-                  widget.addAnswer(
-                    QuizAnswer(
-                      question: currentQuestion,
-                      answer: shuffledOptions[index],
-                    ),
-                  );
-                  nextQuestion();
-                });
-              },
-              separatorBuilder: (context, index) {
-                return const SizedBox(height: 10);
-              },
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text('Question ${currentQuestionIndex + 1}',
+                style: GoogleFonts.roboto(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold)),
+            const SizedBox(height: 10),
+            Text(currentQuestion.question,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.roboto(
+                    color: Colors.white,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                )
             ),
-          ),
-        ],
+            const SizedBox(height: 10),
+            SizedBox(
+              width: 500,
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: shuffledOptions.length,
+                itemBuilder: (context, index) {
+                  return AnswerButton(shuffledOptions[index], () {
+                    widget.addAnswer(
+                      QuizAnswer(
+                        question: currentQuestion,
+                        answer: shuffledOptions[index],
+                      ),
+                    );
+                    nextQuestion();
+                  });
+                },
+                separatorBuilder: (context, index) {
+                  return const SizedBox(height: 10);
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

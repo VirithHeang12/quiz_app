@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/data/questions.dart';
 import 'package:quiz_app/models/quiz_answer.dart';
+import 'package:quiz_app/question_summary.dart';
 
 class ResultScreen extends StatelessWidget {
   const ResultScreen({required this.chosenAnswers, required this.restartQuiz, super.key});
@@ -12,8 +13,6 @@ class ResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final totalQuestions = questions.length;
     final correctAnswers = chosenAnswers.where((answer) => answer.isCorrect).length;
-
-    final percentage = (correctAnswers / totalQuestions) * 100;
 
     return Center(
       child: Column(
@@ -29,15 +28,8 @@ class ResultScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          Text(
-            'Your score is ${percentage.toStringAsFixed(2)}%',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 40),
+          QuestionSummary(chosenAnswers: chosenAnswers),
+          const SizedBox(height: 20),
           OutlinedButton.icon(
             onPressed: restartQuiz,
             style: OutlinedButton.styleFrom(
